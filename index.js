@@ -24,7 +24,24 @@ app.get("/health", (req, res) => {
 
 const PORT = 3000;
 
+app.post("/product", async (req, res) => {
+  //console.log('Product Created');
+  const { name, description, price, productImage, brand } = req.body;
+  let newProduct = new Product({
+    name: name,
+    description: description,
+    price: price,
+    productImage: productImage,
+    brand: brand,
+  });
 
+  const saveProduct = await newProduct.save();
+  res.json({
+    status: "Success",
+    product: saveProduct,
+    message: "New Product created successfully!",
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
