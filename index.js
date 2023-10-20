@@ -81,6 +81,15 @@ app.get('/product',async(req,res)=>{
     })
 })
 
+//get all products
+app.get('/products', async(req,res)=>{
+    const products = await Product.find()
+    res.json({
+        status:'success',
+        data:products,
+        message:"All Products Fetched Successfully"
+        })
+})
 
 
 app.listen(PORT, () => {
