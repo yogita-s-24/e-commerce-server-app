@@ -127,7 +127,39 @@ app.put("/product/:_id", async (req, res) => {
   });
 });
 
+//patch
 
+app.patch("/product/:_id", async (req, res) => {
+  const { _id } = req.params;
+  const { name, description, price, productImage, brand } = req.body;
+
+  const product = await Product.findById(_id);
+
+  if (name) {
+    product.name = name;
+  }
+
+  if (description) {
+    product.description = description;
+  }
+  if (price) {
+    product.price = price;
+  }
+  if (productImage) {
+    product.productImage = productImage;
+  }
+  if (brand) {
+    product.brand = brand;
+  }
+
+  const updateSpecificData = await product.save();
+
+  res.json({
+    status: "success",
+    data: updateSpecificData,
+    message: "Update Successful",
+  });
+});
 
 
 app.listen(PORT, () => {
