@@ -34,31 +34,29 @@ connectMongoDB();
 //model
 // const Product = model('Product', productSchema);
 
-
 app.get("/health", (req, res) => {
   res.send("Status : Ok");
 });
 
 const PORT = 3000;
 
-
 app.post("/product", async (req, res) => {
   //console.log('Product Created');
   const { name, description, price, productImage, brand } = req.body;
 
-// Create a new Product instance with the extracted data
+  // Create a new Product instance with the extracted data
   let newProduct = new Product({
     name: name,
     description: description,
     price: price,
     productImage: productImage,
-    brand: brand
+    brand: brand,
   });
 
-// Save the new product to the database
+  // Save the new product to the database
   const saveProduct = await newProduct.save();
 
-// Respond with a success message and the saved product data
+  // Respond with a success message and the saved product data
   res.json({
     status: "Success",
     product: saveProduct,
@@ -67,29 +65,43 @@ app.post("/product", async (req, res) => {
 });
 
 //get products using name
-app.get('/product',async(req,res)=>{
+app.get("/product", async (req, res) => {
+  const { name } = req.query;
 
-    const {name} = req.query;
+  const product = await Product.findOne({ name: name });
 
-    const product = await Product.findOne({name:name})
-
-    res.json({
-        status:'success',
-        data:product,
-        message:"Products fetched Successfully"
-
-    })
-})
+  res.json({
+    status: "success",
+    data: product,
+    message: "Products fetched Successfully",
+  });
+});
 
 //get all products
-app.get('/products', async(req,res)=>{
-    const products = await Product.find()
-    res.json({
-        status:'success',
-        data:products,
-        message:"All Products Fetched Successfully"
-        })
-})
+app.get("/products", async (req, res) => {
+  const products = await Product.find();
+  res.json({
+    status: "success",
+    data: products,
+    message: "All Products Fetched Successfully",
+  });
+});
+
+//delete api for delete student from db
+app.delete("/product/:_id", async (req, res) => {
+  const { _id } = req.params;
+
+  await Product.deleteOne({ _id: _id });
+
+  res.json({
+    status: "success",
+    message: `Deleted ${_id}`,
+  });
+});
+
+
+
+
 
 
 app.listen(PORT, () => {
