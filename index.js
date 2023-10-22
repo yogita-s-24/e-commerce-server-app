@@ -99,7 +99,33 @@ app.delete("/product/:_id", async (req, res) => {
   });
 });
 
+//update api for update product from db using 'put method
+//put
 
+app.put("/product/:_id", async (req, res) => {
+  const { _id } = req.params;
+  const { name, description, price, productImage, brand } = req.body;
+
+  await Product.updateOne(
+    { _id: _id },
+    {
+      $set: {
+        name: name,
+        description: description,
+        price: price,
+        productImage: productImage,
+        brand: brand,
+      },
+    } // find the document with this id
+  );
+  const findProduct = await Product.findOne({ _id: _id });
+
+  res.json({
+    status: "success",
+    data: findProduct,
+    message: "Updated Successfully",
+  });
+});
 
 
 
